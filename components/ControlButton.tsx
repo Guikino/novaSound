@@ -1,7 +1,13 @@
 import { Mic, Wind, VolumeX } from '@tamagui/lucide-icons'
 import { Text, YStack } from 'tamagui'
 
-const ControlButton = ({ icon: Icon, label, active = false }) => (
+interface ControlButtonProps {
+  icon: typeof Mic | typeof Wind | typeof VolumeX
+  label: string
+  active?: boolean
+}
+
+const ControlButton = ({ icon: Icon, label, active = false, ...rest }) => (
   <YStack
     flex={1}
     bg={active ? "$blue10" : "#1a1a1a"}

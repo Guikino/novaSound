@@ -1,42 +1,37 @@
-import { useState, useEffect } from 'react'
-import * as Audio from 'expo-av' // Voltando para o AV que é o mais comum no Expo Go atual
+import { useEffect, useState } from 'react';
+import { NativeModules, Platform } from 'react-native';
+
+const { BluetoothModule } = NativeModules;
 
 export default function useAudioOutput() {
-  const [isHeadsetConnected, setIsHeadsetConnected] = useState(false)
-  const [deviceName, setDeviceName] = useState("NovaSound Device")
+  const [isHeadsetConnected, setIsHeadsetConnected] = useState(false);
+  const [deviceName, setDeviceName] = useState("Alto-falante");
+  const [deviceBattery, setDeviceBattery] = useState<number | null>(null);
 
-  useEffect(() => {
-    const checkAudio = async () => {
+  const updateDeviceInfo = async () => {
+    if (Platform.OS === 'android') {
       try {
-       
-        const audioModule = Audio as any
-        
-        if (audioModule && typeof audioModule.getAudioOutputsAsync === 'function') {
-          const outputs = await audioModule.getAudioOutputsAsync()
-          const bluetooth = outputs.find(
-            (o: any) => o.type === 'Bluetooth' || o.type === 'Headphones'
-          )
-          
-          setIsHeadsetConnected(!!bluetooth)
-          if (bluetooth) setDeviceName(bluetooth.name || "Fone Conectado")
-        } 
-        // 2. Se a função acima não existir, tentamos o método de rotas (fallback)
-        else if (typeof audioModule.getAudioRouteAsync === 'function') {
-          const route = await audioModule.getAudioRouteAsync()
-          const hasHeadset = route.outputs.some(
-            (o: any) => o.type === 'Bluetooth' || o.type === 'Headphones'
-          )
-          setIsHeadsetConnected(hasHeadset)
+        const info = await BluetoothModule.getConnectedDeviceInfo();
+        if (info) {
+          setIsHeadsetConnected(true);
+          setDeviceName(info.name);
+          // O valor -1 indica que o fone não informou a bateria
+         setDeviceBattery(info.battery !== undefined && info.battery !== -1 ? info.battery : null);
+        } else {
+          setIsHeadsetConnected(false);
+          setDeviceName("Alto-falante");
+          setDeviceBattery(null);
         }
       } catch (e) {
-        // Silencia erros de hardware para não travar a interface
+        console.error("Erro no módulo nativo:", e);
       }
     }
+  };
 
-    checkAudio()
-    const interval = setInterval(checkAudio, 5000)
-    return () => clearInterval(interval)
-  }, [])
+  useEffect(() => {
+    const interval = setInterval(updateDeviceInfo, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-  return { isHeadsetConnected, deviceName }
+  return { isHeadsetConnected, deviceName, deviceBattery };
 }
