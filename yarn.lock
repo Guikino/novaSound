@@ -1984,6 +1984,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@miblanchard/react-native-slider@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "@miblanchard/react-native-slider@npm:2.6.0"
+  peerDependencies:
+    react: ">=16.8"
+    react-native: ">=0.59"
+  checksum: 10/1e3fc0892e92d5b414654f8eaf0802e30eda20d2a0c493446423c45685aa8837c7891b71a5cbdef16f10f2b61b32759b4ecb11e70de265c26762369cbae8089b
+  languageName: node
+  linkType: hard
+
 "@motionone/animation@npm:^10.12.0":
   version: 10.18.0
   resolution: "@motionone/animation@npm:10.18.0"
@@ -9079,6 +9089,7 @@ __metadata:
     "@babel/core": "npm:^7.24.6"
     "@expo/metro-config": "npm:~54.0.2"
     "@expo/metro-runtime": "npm:~6.1.2"
+    "@miblanchard/react-native-slider": "npm:^2.6.0"
     "@react-navigation/native": "npm:^7.1.6"
     "@tamagui/babel-plugin": "npm:^1.144.1"
     "@tamagui/cli": "npm:^1.144.1"

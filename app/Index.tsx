@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
-import { ScrollView, Text, View, XStack, YStack, Image, Stack as TamaguiStack } from "tamagui"; // Adicionei TamaguiStack para evitar conflito
+import { ScrollView, Text, XStack, YStack, Image, Button } from "tamagui"; 
 import {
   Battery as BatteryIcon,
   Bluetooth,
@@ -27,6 +27,8 @@ import Card from "components/Card";
 import ControlButton from "components/ControlButton";
 import ProgressControl from "components/ProgressControl";
 import NavBar from "components/NavBar";
+import Equalizer from "components/Equalizer"; // Seu componente novo
+
 import { useVolume } from "hooks/useVolume";
 import { useMusicControl } from "hooks/useMusicControl";
 import { useSystemInfo } from "hooks/useSystemInfo";
@@ -35,34 +37,27 @@ export default function Index() {
   const { isHeadsetConnected, deviceName, deviceBattery } = useAudioOutput();
   const [activeMode, setActiveMode] = useState("OFF");
   
+  // ESTADO DO SCROLL (Essencial para o Slider não travar)
+  const [scrollEnabled, setScrollEnabled] = useState(true);
 
   const [showPlayer, setShowPlayer] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState<boolean>(false);
   
   const { volume, updateVolume } = useVolume();
-  
-
   const { togglePlay, next, prev, openPermissionSettings, checkMediaActive, isPermissionGranted, getIsPlaying} = useMusicControl();
-const { appVersion } = useSystemInfo();
+  const { appVersion } = useSystemInfo();
 
   useEffect(() => {
     async function init() {
-     
       if (Platform.OS === "android" && Platform.Version >= 31) {
         try {
-
-            const permissions = [
+            await PermissionsAndroid.requestMultiple([
                 PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
                 PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            ].filter(Boolean);
-            
-            await PermissionsAndroid.requestMultiple(permissions);
-        } catch (err) {
-          console.warn(err);
-        }
+            ]);
+        } catch (err) { console.warn(err); }
       }
-
 
       const permissionGranted = await isPermissionGranted();
       if (!permissionGranted) {
@@ -76,11 +71,9 @@ const { appVersion } = useSystemInfo();
         );
       }
     }
-
     init();
   }, []);
 
- 
   useEffect(() => {
     const syncStatus = async () => {
       const isActive = await checkMediaActive();
@@ -110,16 +103,15 @@ const { appVersion } = useSystemInfo();
               />
               <YStack>
                 <XStack items="center" gap="$3" >
-              <Text color="$color" fontSize={20} fontWeight="700">
-                NovaSound
-              </Text>
-              <Text color="$color8" fontSize={12} fontWeight="600">
-                {appVersion}
-              </Text>
-              </XStack>
-               <Text color="$color11">Control Center</Text>
+                  <Text color="$color" fontSize={20} fontWeight="700">
+                    NovaSound
+                  </Text>
+                  <Text color="$color8" fontSize={12} fontWeight="600">
+                    {appVersion}
+                  </Text>
+                </XStack>
+                <Text color="$color11">Control Center</Text>
               </YStack>
-             
             </XStack>
           ),
           headerRight: () => (
@@ -151,14 +143,18 @@ const { appVersion } = useSystemInfo();
         }}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      {/* SCROLLVIEW CONTROLADO PELO ESTADO */}
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={scrollEnabled} 
+      >
         <YStack p="$4" gap="$4" pb="$20">
           
           {/* CARD CONEXÃO */}
           <Card
             variant="gradient"
-            title={isHeadsetConnected ? deviceName ?? "Connected Device" : "No device connected"}
-            subtitle={isHeadsetConnected ? "Connected" : "Disconnected"}
+            title={isHeadsetConnected ? deviceName ?? "No device connected" : "No device connected"}
+            subtitle={isHeadsetConnected && deviceName ?  "Connected" : "Disconnected"}
             icon={<Bluetooth size={120} color="white" />}
             content={
               <XStack gap="$3" width="100%">
@@ -183,24 +179,16 @@ const { appVersion } = useSystemInfo();
                 variant="gradient"
                 content={
                   <XStack gap="$3" items="center" m="auto">
-                    
-                    <TamaguiStack 
-                        borderWidth={2} borderColor="$blue10" p="$2" borderRadius="$10"
-                        animation="quick"
-                        pressStyle={{ scale: 0.85, opacity: 0.7, bg: "$blue10" }}
-                        onPress={() => prev()}
-                    >
-                      <SkipBack size={40} color="white" />
-                    </TamaguiStack>
+                    <Button circular size={60} bg="transparent" borderColor="$blue10" borderWidth={2} onPress={() => prev()}>
+                        <SkipBack size={40} color="white" />
+                    </Button>
 
-                    {/* Botão Play/Pause */}
                     <YStack
                       bg="white"
                       animation="quick"
                       onPress={() => {
                         setMusicPlaying(!musicPlaying);
                         togglePlay();
-                        
                       }}
                       p="$2.5"
                       borderRadius="$10"
@@ -213,20 +201,20 @@ const { appVersion } = useSystemInfo();
                       )}
                     </YStack>
 
-                    {/* Botão Próximo - Com animação e fundo azul */}
-                    <TamaguiStack 
-                        borderWidth={2} borderColor="$blue10" p="$2" borderRadius="$10"
-                        animation="quick"
-                        pressStyle={{ scale: 0.85, opacity: 0.7, bg: "$blue10" }}
-                        onPress={() => next()}
-                    >
-                      <SkipForward size={40} color="white" />
-                    </TamaguiStack>
+                    <Button circular size={60} bg="transparent" borderColor="$blue10" borderWidth={2} onPress={() => next()}>
+                        <SkipForward size={40} color="white" />
+                    </Button>
                   </XStack>
                 }
               />
             </YStack>
           )}
+
+          {/* EQUALIZADOR RECEBENDO A FUNÇÃO DE TRAVAR SCROLL */}
+          <Equalizer 
+            variant="gradient" 
+            onScrollToggle={setScrollEnabled}
+          />
 
           {/* SEÇÃO VOLUME */}
           <YStack gap="$2" mt="$2">
@@ -247,9 +235,7 @@ const { appVersion } = useSystemInfo();
               }}
             />
           </YStack>
-
-          <Card variant="gradient" title="Equalizer Profile" subtitle="Dynamic AI Mode" />
-          <Card variant="gradient" title="Device Info" subtitle="Firmware v1.2.4" />
+         
         </YStack>
       </ScrollView>
 
