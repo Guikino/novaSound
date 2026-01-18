@@ -210,12 +210,7 @@ export default function Index() {
             </YStack>
           )}
 
-          <Equalizer 
-            variant="gradient" 
-            onScrollToggle={setScrollEnabled}
-          />
-
-          {/* SEÇÃO VOLUME */}
+           {/* SEÇÃO VOLUME */}
           <YStack gap="$2" mt="$2">
             <XStack px="$2" gap="$2" items="center">
               <Volume2 size={16} color="$color9" />
@@ -234,6 +229,13 @@ export default function Index() {
               }}
             />
           </YStack>
+
+          <Equalizer 
+            variant="gradient" 
+            onScrollToggle={setScrollEnabled}
+          />
+
+         
          
         </YStack>
       </ScrollView>
