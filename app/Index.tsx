@@ -169,8 +169,8 @@ export default function Index() {
           {showPlayer && (
             <YStack gap="$2" mt="$2">
               <XStack px="$2" gap="$2" items="center">
-                <Music size={16} color="$gray11" />
-                <Text color="$gray11" fontWeight="800" fontSize={14} letterSpacing={1.5} textTransform="uppercase">
+                <Music size={16} color="$color9" />
+                <Text color="$color9" fontWeight="800" fontSize={14} letterSpacing={1.5} textTransform="uppercase">
                   Now Playing
                 </Text>
               </XStack>
@@ -210,7 +210,6 @@ export default function Index() {
             </YStack>
           )}
 
-          {/* EQUALIZADOR RECEBENDO A FUNÇÃO DE TRAVAR SCROLL */}
           <Equalizer 
             variant="gradient" 
             onScrollToggle={setScrollEnabled}
@@ -219,8 +218,8 @@ export default function Index() {
           {/* SEÇÃO VOLUME */}
           <YStack gap="$2" mt="$2">
             <XStack px="$2" gap="$2" items="center">
-              <Volume2 size={16} color="$gray11" />
-              <Text color="$gray11" fontWeight="800" fontSize={14} letterSpacing={1.5} textTransform="uppercase">
+              <Volume2 size={16} color="$color9" />
+              <Text color="$color9" fontWeight="800" fontSize={14} letterSpacing={1.5} textTransform="uppercase">
                 Volume {Math.round((volume || 0) * 100)}%
               </Text>
             </XStack>

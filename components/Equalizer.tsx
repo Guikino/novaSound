@@ -6,8 +6,6 @@ import { LinearGradient } from '@tamagui/linear-gradient';
 import { Slider } from '@miblanchard/react-native-slider'; // <--- A BIBLIOTECA MÁGICA
 
 import { useEqualizer } from "../hooks/useEqualizer"; 
-
-// === COMPONENTE SLIDER USANDO A BIBLIOTECA PRONTA ===
 const EQSlider = ({ 
     value, 
     label, 
@@ -20,26 +18,17 @@ const EQSlider = ({
     onScrollToggle: (enabled: boolean) => void;
 }) => (
   <YStack items="center" gap="$2" height={200} width={60} justify="flex-end">
-    
-    {/* Container para dar altura ao slider vertical */}
     <YStack height={160} width={40} alignItems="center" justifyContent="center">
         <Slider
             value={value}
             onValueChange={(vals) => onChange(vals[0])}
-            
-            // 1. O PULO DO GATO: Suporte nativo a vertical
             vertical={true}
-            
             minimumValue={0}
             maximumValue={100}
             step={1}
-            
-            // 2. Cores e Estilos
-            minimumTrackTintColor="#2b7de9" // Azul (cor preenchida)
-            maximumTrackTintColor="#333333" // Cinza escuro (fundo)
-            thumbTintColor="#ffffff"        // Bolinha branca
-            
-            // 3. Estilização da trilha e da bolinha
+            minimumTrackTintColor="#2b7de9" 
+            maximumTrackTintColor="#333333" 
+            thumbTintColor="#ffffff"  
             trackStyle={{ width: 180, height: 6, borderRadius: 4 }}
             thumbStyle={{ 
                 width: 24, 
@@ -53,8 +42,6 @@ const EQSlider = ({
                 shadowRadius: 3.84,
                 elevation: 5,
             }}
-            
-            // 4. Controle de Scroll da Tela (Continua necessário)
             onSlidingStart={() => onScrollToggle(false)}
             onSlidingComplete={() => onScrollToggle(true)}
         />
@@ -80,13 +67,23 @@ export default function Equalizer({ variant = "solid", onScrollToggle }: Equaliz
     }
   };
 
-  const PRESETS = ["Balanced", "Gamer", "Bass", "Rock", "Podcast", "Cinema", "Jazz"];
+  const PRESETS = [
+    "Balanced", 
+    "Gamer", 
+    "Metal", 
+    "Rock", 
+    "Pop", 
+    "Podcast", 
+    "Cinema", 
+    "Jazz", 
+    "Trap"
+  ];
 
   return (
     <YStack gap="$3" mt="$4">
       <XStack px="$2" gap="$2" items="center">
-        <Sliders size={16} color="$gray11" />
-        <Text color="$gray11" fontWeight="800" fontSize={12} letterSpacing={1.5} textTransform="uppercase">
+        <Sliders size={16} color="$color9" />
+        <Text color="$color9" fontWeight="800" fontSize={14} letterSpacing={1.5} textTransform="uppercase">
           Sound Personalization
         </Text>
       </XStack>
@@ -143,7 +140,6 @@ export default function Equalizer({ variant = "solid", onScrollToggle }: Equaliz
           />
         </XStack>
 
-        {/* Input IA */}
         <XStack bg="#000" borderRadius="$10" items="center" borderWidth={1} borderColor="$gray6" pl="$3" pr="$1" py="$1">
          <TextInput
             style={{ flex: 1, backgroundColor: 'transparent', color: 'white', fontSize: 14, paddingVertical: 8 }}
@@ -162,7 +158,6 @@ export default function Equalizer({ variant = "solid", onScrollToggle }: Equaliz
           />
         </XStack>
 
-        {/* Presets */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <XStack  gap="$2">
             {PRESETS.map((preset) => (

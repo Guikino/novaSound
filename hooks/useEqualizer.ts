@@ -43,49 +43,52 @@ export const useEqualizer = () => {
     setBands(prev => ({ ...prev, [bandKey]: value }));
     updateNative(bandMap[bandKey], value);
   };
-
-  // === PRESETS OTIMIZADOS ===
   const applyPreset = useCallback((type: string) => {
     let newBands: EqBands = { ...bands };
 
     console.log("Aplicando Preset:", type);
 
-    switch (type) {
+   switch (type) {
+
       case 'Balanced': 
         newBands = { hz60: 50, hz230: 50, hz910: 50, hz3600: 50, hz14000: 50 }; 
         break;
       
+
       case 'Gamer': 
-        // Scout Mode: Foco em passos e clareza, limpando graves excessivos
         newBands = { hz60: 55, hz230: 40, hz910: 45, hz3600: 80, hz14000: 65 }; 
         break;
 
-      case 'Bass': 
-        // Foco em Batida (Trap/HipHop)
-        newBands = { hz60: 85, hz230: 65, hz910: 45, hz3600: 50, hz14000: 55 }; 
+      case 'Metal': 
+        newBands = { hz60: 80, hz230: 40, hz910: 35, hz3600: 75, hz14000: 80 }; 
         break;
 
       case 'Rock': 
-        // V-Shape: Bateria e Guitarra fortes
-        newBands = { hz60: 75, hz230: 45, hz910: 40, hz3600: 70, hz14000: 75 }; 
+        newBands = { hz60: 75, hz230: 50, hz910: 45, hz3600: 70, hz14000: 70 }; 
         break;
-      
-      case 'Podcast': 
-        // Foco na Voz
-        newBands = { hz60: 35, hz230: 60, hz910: 80, hz3600: 60, hz14000: 40 }; 
+
+      case 'Pop': 
+        newBands = { hz60: 60, hz230: 55, hz910: 65, hz3600: 60, hz14000: 65 }; 
         break;
-      
-      case 'Cinema': 
-        // Imersão (Explosões + Diálogos)
-        newBands = { hz60: 70, hz230: 50, hz910: 65, hz3600: 55, hz14000: 60 }; 
+
+      case 'Trap': 
+        newBands = { hz60: 90, hz230: 65, hz910: 40, hz3600: 50, hz14000: 75 }; 
         break;
-      
+
       case 'Jazz': 
-        // Rico instrumental
         newBands = { hz60: 60, hz230: 55, hz910: 50, hz3600: 60, hz14000: 70 }; 
         break;
 
+      case 'Cinema': 
+        newBands = { hz60: 70, hz230: 50, hz910: 65, hz3600: 55, hz14000: 60 }; 
+        break;
+
+      case 'Podcast': 
+        newBands = { hz60: 35, hz230: 60, hz910: 80, hz3600: 60, hz14000: 40 }; 
+        break;
+
       default: 
+        console.warn("Preset desconhecido:", type);
         break;
     }
 
