@@ -28,10 +28,11 @@ import ControlButton from "components/ControlButton";
 import ProgressControl from "components/ProgressControl";
 import NavBar from "components/NavBar";
 import Equalizer from "components/Equalizer"; // Seu componente novo
-
+import { Slider } from '@miblanchard/react-native-slider';
 import { useVolume } from "hooks/useVolume";
 import { useMusicControl } from "hooks/useMusicControl";
 import { useSystemInfo } from "hooks/useSystemInfo";
+
 
 export default function Index() {
   const { isHeadsetConnected, deviceName, deviceBattery } = useAudioOutput();
@@ -143,7 +144,7 @@ export default function Index() {
         }}
       />
 
-      {/* SCROLLVIEW CONTROLADO PELO ESTADO */}
+    
       <ScrollView 
         showsVerticalScrollIndicator={false}
         scrollEnabled={scrollEnabled} 
@@ -211,22 +212,42 @@ export default function Index() {
           )}
 
            {/* SEÇÃO VOLUME */}
-          <YStack gap="$2" mt="$2">
+          <YStack gap="$2" mt="$2" px="$2" >
             <XStack px="$2" gap="$2" items="center">
               <Volume2 size={16} color="$color9" />
               <Text color="$color9" fontWeight="800" fontSize={14} letterSpacing={1.5} textTransform="uppercase">
                 Volume {Math.round((volume || 0) * 100)}%
               </Text>
             </XStack>
-
-            <ProgressControl
-              value={[Math.round((volume || 0) * 100)]}
+            <Slider
+            
+            value={[Math.round((volume || 0) * 100)]}
               onValueChange={(val) => {
                 if (val && val.length > 0) {
                     const newVol = val[0] / 100;
                     updateVolume(newVol);
                 }
               }}
+              minimumValue={0}
+              maximumValue={100}
+              step={1}
+              minimumTrackTintColor="#2b7de9" 
+              maximumTrackTintColor="#333333"
+              thumbTintColor="#ffffff"
+             
+               trackStyle={{ width: "100%", height: 6, borderRadius: 4,  }}
+            thumbStyle={{ 
+                width: 24, 
+                height: 24, 
+                borderRadius: 12, 
+                borderWidth: 1, 
+                borderColor: '#cccccc',
+                shadowColor: "#000000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+            }}
             />
           </YStack>
 
@@ -240,7 +261,7 @@ export default function Index() {
         </YStack>
       </ScrollView>
 
-      <NavBar />
+      
     </YStack>
   );
 }
