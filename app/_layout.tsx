@@ -72,8 +72,8 @@ function RootLayoutNav() {
             initialParams={{ themeMode, toggleTheme }} 
           />
            <Stack.Screen 
-        name="conectarBluetooth" 
-        options={{ title: 'Conectar Bluetooth', headerBackTitle:"return"}} 
+        name="connectedBluetooth" 
+        options={{ title: 'Conected Bluetooth', headerBackTitle:"return"}} 
         
       />
       <Stack.Screen 
