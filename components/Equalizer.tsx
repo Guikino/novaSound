@@ -161,10 +161,10 @@ export default function Equalizer({ variant = "solid", onScrollToggle }: Equaliz
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <XStack  gap="$2">
             {PRESETS.map((preset) => (
-              <Button  key={preset}>
+              <Button   key={preset}>
                 <TamaguiStack
                 onPress={() => applyPreset(preset)}
-                
+               
                   bg="$gray4"
                   px="$3"
                   py="$1"

@@ -48,9 +48,12 @@ function RootLayoutNav() {
   }
 
   return (
-    <ThemeProvider value={themeMode === 'dark' ? DarkTheme : DefaultTheme}>
+    <>
+     <ThemeProvider value={themeMode === 'dark' ? DarkTheme : DefaultTheme}>
       <Theme name={themeMode}>
         <StatusBar style={themeMode === 'dark' ? 'light' : 'dark'} />
+
+        
         
         <Stack
           screenOptions={{
@@ -60,9 +63,7 @@ function RootLayoutNav() {
             headerTintColor: themeMode === 'dark' ? '#fff' : '#0F3460',
           }}
         >
-          {/* Passamos as propriedades para a tela index via initialParams 
-             ou apenas deixamos que o index as use via contexto se necessário.
-          */}
+         
           <Stack.Screen 
             name="index" 
             options={{ 
@@ -70,8 +71,25 @@ function RootLayoutNav() {
             }} 
             initialParams={{ themeMode, toggleTheme }} 
           />
+           <Stack.Screen 
+        name="connectedBluetooth" 
+        options={{ title: 'Conected Bluetooth', headerBackTitle:"return"}} 
+        
+      />
+      <Stack.Screen 
+        name="+not-found" 
+        options={{ title: 'Oops!' }} 
+      />
         </Stack>
+       
+
+        
       </Theme>
     </ThemeProvider>
+
+      
+   
+    
+    </>
   )
 }
