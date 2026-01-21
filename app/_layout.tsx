@@ -1,13 +1,13 @@
 import '../tamagui-web.css'
-
 import { useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
+import { StatusBar } from 'expo-status-bar' // StatusBar restaurada
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { SplashScreen, Stack } from 'expo-router'
+import { SplashScreen, Stack, useRouter, useSegments } from 'expo-router'
 import { Provider } from 'components/Provider'
-import { Theme } from 'tamagui'
+import { Theme } from 'tamagui' // Theme restaurado
+import useAudioOutput from 'hooks/useAudioOutput'
 
 export { ErrorBoundary } from 'expo-router'
 
@@ -18,6 +18,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
+  // 1. Carregamento de Fontes (Restaurado)
   const [interLoaded, interError] = useFonts({
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
@@ -39,22 +40,37 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const systemColorScheme = useColorScheme()
-  // Estado que manda no tema do app todo
-  const [themeMode, setThemeMode] = useState<'light' | 'dark'>(systemColorScheme || 'dark')
+  const { isHeadsetConnected, isLoading } = useAudioOutput();
+  const segments = useSegments();
+  const router = useRouter();
+  
+  const systemColorScheme = useColorScheme();
+  const [themeMode, setThemeMode] = useState<'light' | 'dark'>(systemColorScheme || 'dark');
 
   const toggleTheme = () => {
     setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
   }
 
+  // 2. Lógica de Proteção de Rota
+  useEffect(() => {
+    if (isLoading) return; // Aguarda a primeira verificação do hook
+
+    const inBluetoothScreen = segments[0] === 'connectedBluetooth';
+
+    if (!isHeadsetConnected && !inBluetoothScreen) {
+      // Se NÃO tem fone e NÃO está na tela de aviso -> Manda para lá
+      router.replace('/connectedBluetooth');
+    } else if (isHeadsetConnected && inBluetoothScreen) {
+      // Se TEM fone e ESTÁ na tela de aviso -> Libera para a Home
+      router.replace('/');
+    }
+  }, [isHeadsetConnected, segments, isLoading]);
+
   return (
-    <>
-     <ThemeProvider value={themeMode === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={themeMode === 'dark' ? DarkTheme : DefaultTheme}>
       <Theme name={themeMode}>
         <StatusBar style={themeMode === 'dark' ? 'light' : 'dark'} />
 
-        
-        
         <Stack
           screenOptions={{
             headerStyle: {
@@ -63,33 +79,33 @@ function RootLayoutNav() {
             headerTintColor: themeMode === 'dark' ? '#fff' : '#0F3460',
           }}
         >
-         
+      
           <Stack.Screen 
             name="index" 
             options={{ 
-                headerShown: true 
+              headerShown: true,
+              title: "index" 
             }} 
             initialParams={{ themeMode, toggleTheme }} 
           />
-           <Stack.Screen 
-        name="connectedBluetooth" 
-        options={{ title: 'Conected Bluetooth', headerBackTitle:"return"}} 
-        
-      />
-      <Stack.Screen 
-        name="+not-found" 
-        options={{ title: 'Oops!' }} 
-      />
-        </Stack>
-       
 
+          
+          <Stack.Screen 
+            name="connectedBluetooth" 
+            options={{ 
+                headerShown: false,
+                gestureEnabled: false 
+            }} 
+          />
+
+          <Stack.Screen 
+            name="+not-found" 
+            options={{ title: 'Oops!' }} 
+          />
+        </Stack>
         
+
       </Theme>
     </ThemeProvider>
-
-      
-   
-    
-    </>
   )
 }
