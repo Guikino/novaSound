@@ -1,14 +1,19 @@
-import {  Cog, Headset, SlidersHorizontal } from '@tamagui/lucide-icons'
-import React, { useState } from 'react'
-import { Text, XStack, YStack } from 'tamagui'
+import { Cog, Headset, SlidersHorizontal } from '@tamagui/lucide-icons'
+import { Link, usePathname } from 'expo-router' // Importe o usePathname
+import React from 'react'
+import { XStack, YStack } from 'tamagui'
 
-export default function NavBar() {
-    const [activeTab, setActiveTab] = useState('1')
+interface NavBarProps {
+    path: string
+}
+
+export default function NavBar({path}: NavBarProps) {
+    const pathname = usePathname()
 
     const items = [
-        { id: '1', icon: Headset  },
-        { id: '2', icon: SlidersHorizontal},
-        { id: '3', icon: Cog }
+        { id: '1', icon: Headset, link: '/' },
+        { id: '2', icon: SlidersHorizontal, link: '/controls' },
+        { id: '3', icon: Cog, link: '/controls'     } 
     ]
 
     return (
@@ -24,31 +29,36 @@ export default function NavBar() {
             paddingHorizontal="$4"
             justifyContent="space-around" 
             width="90%" 
+            zIndex={1000} // Importante para garantir que fique sobre o conteúdo
+            // Sombras
             elevation={10} 
-            shadowColor="#000" // Sombra para o iOS
+            shadowColor="#000"
             shadowOffset={{ width: 0, height: 5 }}
             shadowOpacity={0.3}
             shadowRadius={10}
         >
             {items.map((item) => {
-                const isActive = activeTab === item.id
+                const isActive = pathname === item.link
                 
                 return (
-                    <YStack 
-                        key={item.id}
-                        onPress={() => setActiveTab(item.id)}
-                        items="center" 
-                        py="$2"
-                        flex={1}
-                        pressStyle={{ opacity: 0.5, scale: 0.95 }} 
-                        animation="quick" 
-                    >
-                        <item.icon 
-                            size={25} 
-                            color={isActive ? "$blue10" : "$gray10"} 
-                        />
-                       
-                    </YStack>
+                    
+                    <Link key={item.id} href={item.link as any} asChild replace>
+                        <YStack 
+                            items="center" 
+                            justifyContent="center"
+                            py="$2"
+                            px="$4" 
+                            borderRadius="$4"
+                            pressStyle={{ opacity: 0.5, scale: 0.95 }} 
+                            animation="quick"
+                            backgroundColor={isActive ? '$gray2' : 'transparent'}
+                        >
+                            <item.icon 
+                                size={24} 
+                                color={path === item.link ? "$blue10" : "$gray10"} 
+                            />
+                        </YStack>
+                    </Link>
                 )
             })}
         </XStack>

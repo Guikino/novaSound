@@ -1,13 +1,16 @@
 import '../tamagui-web.css'
 import { useEffect, useState } from 'react'
-import { useColorScheme } from 'react-native'
-import { StatusBar } from 'expo-status-bar' // StatusBar restaurada
+import { Pressable, useColorScheme } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { SplashScreen, Stack, useRouter, useSegments } from 'expo-router'
+import { SplashScreen, Stack, usePathname, useRouter, useSegments } from 'expo-router'
 import { Provider } from 'components/Provider'
-import { Theme } from 'tamagui' // Theme restaurado
+import { Image, Text, Theme, XStack, YStack } from 'tamagui'
 import useAudioOutput from 'hooks/useAudioOutput'
+import NavBar from 'components/NavBar'
+import { Cog, Battery as BatteryIcon} from '@tamagui/lucide-icons'
+import { useSystemInfo } from 'hooks/useSystemInfo'
 
 export { ErrorBoundary } from 'expo-router'
 
@@ -18,7 +21,6 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  // 1. Carregamento de Fontes (Restaurado)
   const [interLoaded, interError] = useFonts({
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
@@ -40,9 +42,11 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { isHeadsetConnected, isLoading } = useAudioOutput();
+  const { isHeadsetConnected, isLoading, deviceBattery } = useAudioOutput();
   const segments = useSegments();
   const router = useRouter();
+  const pathname = usePathname()
+  const { appVersion } = useSystemInfo();
   
   const systemColorScheme = useColorScheme();
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>(systemColorScheme || 'dark');
@@ -51,17 +55,14 @@ function RootLayoutNav() {
     setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))
   }
 
-  // 2. Lógica de Proteção de Rota
   useEffect(() => {
-    if (isLoading) return; // Aguarda a primeira verificação do hook
+    if (isLoading) return; 
 
     const inBluetoothScreen = segments[0] === 'connectedBluetooth';
 
     if (!isHeadsetConnected && !inBluetoothScreen) {
-      // Se NÃO tem fone e NÃO está na tela de aviso -> Manda para lá
       router.replace('/connectedBluetooth');
     } else if (isHeadsetConnected && inBluetoothScreen) {
-      // Se TEM fone e ESTÁ na tela de aviso -> Libera para a Home
       router.replace('/');
     }
   }, [isHeadsetConnected, segments, isLoading]);
@@ -70,40 +71,99 @@ function RootLayoutNav() {
     <ThemeProvider value={themeMode === 'dark' ? DarkTheme : DefaultTheme}>
       <Theme name={themeMode}>
         <StatusBar style={themeMode === 'dark' ? 'light' : 'dark'} />
-
+        
         <Stack
           screenOptions={{
+            animation: 'slide_from_right',
+            animationDuration: 200,
             headerStyle: {
               backgroundColor: themeMode === 'dark' ? '#000' : '#fff',
             },
             headerTintColor: themeMode === 'dark' ? '#fff' : '#0F3460',
+            headerShown: true,      
+          
+            
+
+            headerTitle: () => (
+                <XStack items="center" gap="$2">
+                  <Image
+                    source={require("../assets/images/icon.jpeg")}
+                    width={28}
+                    height={28}
+                    borderRadius={6}
+                  />
+                  <YStack>
+                    <XStack items="center" gap="$3" >
+                      <Text color="$color" fontSize={20} fontWeight="700">
+                        NovaSound
+                      </Text>
+                      <Text color="$color8" fontSize={12} fontWeight="600">
+                        {appVersion}
+                      </Text>
+                    </XStack>
+                    <Text color="$color11">Control Center</Text>
+                  </YStack>
+                </XStack>
+              ),
+              headerRight: () => (
+                <XStack gap="$1" items="center" pr="$2">
+                  <XStack
+                    bg="$color5"
+                    borderRadius="$true"
+                    items="center"
+                    gap="$1.5"
+                    px="$2"
+                    py="$1"
+                  >
+                    {deviceBattery !== null && (
+                      <BatteryIcon
+                        size={14}
+                        fill={"green"}
+                        color={deviceBattery < 20 ? "$red10" : "$color"}
+                      />
+                    )}
+                    <Text fontSize={12} fontWeight="600" color="$color">
+                      {deviceBattery !== null ? `${deviceBattery}%` : "N/A"}
+                    </Text>
+                  </XStack>
+                  <Pressable style={{ padding: 8 }}>
+                    <Cog size={20} color="$color11" />
+                  </Pressable>
+                </XStack>
+              ),
           }}
-        >
-      
+        > 
+
           <Stack.Screen 
             name="index" 
-            options={{ 
-              headerShown: true,
-              title: "index" 
-            }} 
             initialParams={{ themeMode, toggleTheme }} 
           />
+          <Stack.Screen 
+            name="controls" 
+          />
 
-          
+     
           <Stack.Screen 
             name="connectedBluetooth" 
             options={{ 
-                headerShown: false,
-                gestureEnabled: false 
+                headerShown: false 
             }} 
           />
 
+         
           <Stack.Screen 
             name="+not-found" 
-            options={{ title: 'Oops!' }} 
+            options={{ 
+                headerShown: true,
+                title: 'Oops!',
+                headerTitle: undefined,
+                headerRight: undefined  
+            }} 
           />
+          
         </Stack>
         
+        <NavBar path={pathname} />
 
       </Theme>
     </ThemeProvider>

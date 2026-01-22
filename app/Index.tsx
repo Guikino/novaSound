@@ -34,7 +34,7 @@ import { useSystemInfo } from "hooks/useSystemInfo";
 
 
 export default function Index() {
-  const { isHeadsetConnected, deviceName, deviceBattery } = useAudioOutput();
+  const { isHeadsetConnected, deviceName } = useAudioOutput();
   const [activeMode, setActiveMode] = useState("OFF");
   
   // ESTADO DO SCROLL (Essencial para o Slider não travar)
@@ -45,7 +45,7 @@ export default function Index() {
   
   const { volume, updateVolume } = useVolume();
   const { togglePlay, next, prev, openPermissionSettings, checkMediaActive, isPermissionGranted, getIsPlaying} = useMusicControl();
-  const { appVersion } = useSystemInfo();
+  
 
   useEffect(() => {
     async function init() {
@@ -94,56 +94,7 @@ export default function Index() {
     <YStack flex={1} bg="$background">
       
 
-      <Stack.Screen
-        options={{
-          headerTitle: () => (
-            <XStack items="center" gap="$2">
-              <Image
-                source={require("../assets/images/icon.jpeg")}
-                width={28}
-                height={28}
-              />
-              <YStack>
-                <XStack items="center" gap="$3" >
-                  <Text color="$color" fontSize={20} fontWeight="700">
-                    NovaSound
-                  </Text>
-                  <Text color="$color8" fontSize={12} fontWeight="600">
-                    {appVersion}
-                  </Text>
-                </XStack>
-                <Text color="$color11">Control Center</Text>
-              </YStack>
-            </XStack>
-          ),
-          headerRight: () => (
-            <XStack gap="$1" items="center">
-              <XStack
-                bg="$color5"
-                borderRadius="$true"
-                items="center"
-                gap="$1.5"
-                px="$2"
-                py="$1"
-              >
-                {deviceBattery !== null && (
-                  <BatteryIcon
-                    size={14}
-                    fill={"green"}
-                    color={deviceBattery < 20 ? "$red10" : "$color"}
-                  />
-                )}
-                <Text fontSize={12} fontWeight="600" color="$color">
-                  {deviceBattery !== null ? `${deviceBattery}%` : "N/A"}
-                </Text>
-              </XStack>
-              <Pressable style={{ padding: 8 }}>
-                <Cog size={20} color="$color11" />
-              </Pressable>
-            </XStack>
-          ),
-        }}
-      />
+      
 
     
       <ScrollView 
@@ -261,7 +212,7 @@ export default function Index() {
          
         </YStack>
       </ScrollView>
-<NavBar />
+
       
     </YStack>
   );
