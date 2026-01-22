@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
-import { ScrollView, Text, XStack, YStack, Image, Button } from "tamagui"; 
+import { ScrollView, Text, XStack, YStack, Image, Button, AlertDialog } from "tamagui"; 
 import {
   Battery as BatteryIcon,
   Bluetooth,
@@ -25,7 +25,6 @@ import {
 import useAudioOutput from "../hooks/useAudioOutput";
 import Card from "components/Card";
 import ControlButton from "components/ControlButton";
-import ProgressControl from "components/ProgressControl";
 import NavBar from "components/NavBar";
 import Equalizer from "components/Equalizer"; // Seu componente novo
 import { Slider } from '@miblanchard/react-native-slider';
@@ -93,6 +92,8 @@ export default function Index() {
 
   return (
     <YStack flex={1} bg="$background">
+      
+
       <Stack.Screen
         options={{
           headerTitle: () => (
@@ -260,7 +261,7 @@ export default function Index() {
          
         </YStack>
       </ScrollView>
-
+<NavBar />
       
     </YStack>
   );

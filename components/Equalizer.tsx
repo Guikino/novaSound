@@ -73,6 +73,7 @@ export default function Equalizer({ variant = "solid", onScrollToggle }: Equaliz
     "Metal", 
     "Rock", 
     "Pop", 
+    "MPB",
     "Podcast", 
     "Cinema", 
     "Jazz", 

@@ -86,6 +86,11 @@ export const useEqualizer = () => {
       case 'Podcast': 
         newBands = { hz60: 35, hz230: 60, hz910: 80, hz3600: 60, hz14000: 40 }; 
         break;
+        case 'MPB': 
+      
+        case 'MPB': 
+        newBands = { hz60: 55, hz230: 65, hz910: 60, hz3600: 55, hz14000: 60 }; 
+        break;
 
       default: 
         console.warn("Preset desconhecido:", type);

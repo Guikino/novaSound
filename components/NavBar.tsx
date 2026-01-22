@@ -1,4 +1,4 @@
-import { AudioLines, Cog, Headset } from '@tamagui/lucide-icons'
+import {  Cog, Headset, SlidersHorizontal } from '@tamagui/lucide-icons'
 import React, { useState } from 'react'
 import { Text, XStack, YStack } from 'tamagui'
 
@@ -6,8 +6,8 @@ export default function NavBar() {
     const [activeTab, setActiveTab] = useState('1')
 
     const items = [
-        { id: '1', icon: AudioLines },
-        { id: '2', icon: Headset },
+        { id: '1', icon: Headset  },
+        { id: '2', icon: SlidersHorizontal},
         { id: '3', icon: Cog }
     ]
 
@@ -38,7 +38,7 @@ export default function NavBar() {
                         key={item.id}
                         onPress={() => setActiveTab(item.id)}
                         items="center" 
-                        paddingVertical="$2"
+                        py="$2"
                         flex={1}
                         pressStyle={{ opacity: 0.5, scale: 0.95 }} 
                         animation="quick" 
