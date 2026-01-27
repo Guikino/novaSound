@@ -11,7 +11,9 @@ class BluetoothPackage : ReactPackage {
             BluetoothModule(reactContext),
             MediaModule(reactContext),
             SystemModule(reactContext),
-            UniversalEQModule(reactContext)
+            UniversalEQModule(reactContext),
+            FindMyBudsModule(reactContext),
+            AudioBoostModule(reactContext)
         )
     }
 

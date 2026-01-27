@@ -13,7 +13,7 @@ class SystemModule(reactContext: ReactApplicationContext) : ReactContextBaseJava
     fun getAppVersion(promise: Promise) {
         try {
             val pInfo = reactApplicationContext.packageManager.getPackageInfo(reactApplicationContext.packageName, 0)
-            val version = pInfo.versionName // Ex: "1.0.0"
+            val version = pInfo.versionName // Ex: "1.0.0a"
             promise.resolve(version)
         } catch (e: Exception) {
             promise.resolve("Unknown")
