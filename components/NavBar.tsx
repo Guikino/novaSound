@@ -13,7 +13,7 @@ export default function NavBar({path}: NavBarProps) {
     const items = [
         { id: '1', icon: Headset, link: '/' },
         { id: '2', icon: SlidersHorizontal, link: '/controls' },
-        { id: '3', icon: Cog, link: '/controls'     } 
+        { id: '3', icon: Cog, link: '/configure'     } 
     ]
 
     return (
@@ -29,7 +29,7 @@ export default function NavBar({path}: NavBarProps) {
             paddingHorizontal="$4"
             justifyContent="space-around" 
             width="90%" 
-            zIndex={1000} // Importante para garantir que fique sobre o conteúdo
+            zIndex={1000} 
             // Sombras
             elevation={10} 
             shadowColor="#000"

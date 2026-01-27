@@ -41,6 +41,7 @@ export const useMusicControl = () => {
     return false;
   };
   
+  
 
   return { togglePlay, next, prev, openPermissionSettings, isPermissionGranted, checkMediaActive, getIsPlaying };
 };
