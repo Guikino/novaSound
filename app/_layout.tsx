@@ -87,7 +87,7 @@ function RootLayoutNav() {
             headerTitle: () => (
                 <XStack items="center" gap="$2">
                   <Image
-                    source={require("../assets/images/icon.jpeg")}
+                    source={require("../assets/images/icon.png")}
                     width={28}
                     height={28}
                     borderRadius={6}
@@ -141,6 +141,9 @@ function RootLayoutNav() {
           <Stack.Screen 
             name="controls" 
           />
+           <Stack.Screen 
+            name="configure" 
+          />
 
      
           <Stack.Screen 
@@ -163,8 +166,9 @@ function RootLayoutNav() {
           
         </Stack>
         
+        {pathname !== '+not-found' && pathname !== 'connectedBluetooth'&&  
         <NavBar path={pathname} />
-
+        }
       </Theme>
     </ThemeProvider>
   )
